@@ -4,7 +4,7 @@ library(xgboost)
 library(caret)
 library(readr)
 
-df <- load_data("C:/Users/Desmer/Desktop/Çalışmalar/used_cars.csv")
+df <- load_data("C:/./used_cars.csv")
 
 # Veri ön işleme
 preprocess_data <- function(df) {
