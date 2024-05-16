@@ -57,8 +57,8 @@ split_data <- function(df, seed, p) {
   return(list(train_data, test_data))
 }
 
-train_data <- split_data(df, 42, 0.6)[[1]]
-test_data <- split_data(df, 42, 0.4)[[2]]
+train_data <- split_data(df, 42, 0.4)[[1]]
+test_data <- split_data(df, 42, 0.6)[[2]]
 
 # XGBoost modeli eğitme
 
