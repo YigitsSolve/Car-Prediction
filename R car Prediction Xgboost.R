@@ -26,7 +26,7 @@ preprocess_data <- function(df) {
 
 df <- preprocess_data(df)
 
-# Eksik değerleri işleme
+# Eksik değerleri işle
 handle_missing_values <- function(df) {
   df$milage <- ifelse(is.na(df$milage), 0, df$milage)
   df <- df %>% drop_na(HP, `Engine Volume (L)`)
@@ -48,7 +48,7 @@ one_hot_encode <- function(df) {
 df <- one_hot_encode(df)
 
 
-# Veriyi eğitim ve test setlerine ayırma
+# Veriyi eğitim ve test setlerine ayır
 split_data <- function(df, seed, p) {
   set.seed(seed)
   train_index <- createDataPartition(df$price, p = p, list = FALSE)
@@ -60,7 +60,7 @@ split_data <- function(df, seed, p) {
 train_data <- split_data(df, 42, 0.4)[[1]]
 test_data <- split_data(df, 42, 0.6)[[2]]
 
-# XGBoost modeli eğitme
+# XGBoost modeli eğitimi
 
 train_xgb_model <- function(train_data) {
   xgb_model <- xgboost(data = as.matrix(select(train_data, where(is.numeric))),
@@ -73,7 +73,7 @@ train_xgb_model <- function(train_data) {
 }
 
 xgb_model <- train_xgb_model(train_data)
-# Test verisi üzerinde tahminler yapma
+# Test verisi üzerinde tahminler yap
 make_predictions <- function(xgb_model, test_data) {
   test_prediction <- predict(xgb_model, xgb.DMatrix(data = as.matrix(select(test_data, where(is.numeric)))))
   return(test_prediction)
@@ -82,7 +82,7 @@ make_predictions <- function(xgb_model, test_data) {
 
 test_prediction <- make_predictions(xgb_model, test_data)
 test_prediction
-# Model performansını değerlendirme
+# Model performansını değerlendir
 evaluate_model <- function(test_data, test_prediction) {
   rmse <- sqrt(mean((test_data$price - test_prediction)^2))
   print(paste("RMSE:", rmse))
@@ -101,7 +101,7 @@ evaluate_model(test_data, test_prediction)
 library(ggplot2)
 library(gridExtra)
 
-# Grafiklerin oluşturulması
+# Grafikleri oluştur
 histogram_hp <- ggplot(df, aes(x = HP)) +
   geom_histogram(fill = "skyblue", color = "black") +
   labs(x = "HP", y = "Frekans", title = "HP Dağılımı") +
@@ -147,18 +147,18 @@ histogram_transmission <- ggplot(df, aes(x = transmission)) +
   labs(x = "Şanzıman", y = "Frekans", title = "Şanzıman Dağılımı") +
   theme_minimal()
 
-# Tahminlerin gerçek değerlerle ilişkisi scatter plot'u
+# Tahminlerin gerçek değerlerle ilişki scatter plot'u
 scatter_plot <- ggplot(results, aes(x = Real_Price, y = Predicted_Price)) +
   geom_point() +
   geom_abline(intercept = 0, slope = 1, color = "red", linetype = "dashed") +
   labs(x = "Gerçek Fiyat", y = "Tahmin Edilen Fiyat", title = "Gerçek vs. Tahmin Edilen Fiyatlar") +
   theme_minimal()
 
-# Grafikleri birleştirme
+# Grafikleri birleştir
 combined_plots <- grid.arrange(histogram_hp, histogram_engine_volume, histogram_model_year, histogram_milage,
                                histogram_accident, histogram_price, histogram_brand, histogram_fuel_type,
                                histogram_transmission, scatter_plot,
                                ncol = 3)
 
-# Grafikleri ekrana bastırma
+# Grafikleri ekrana bastır
 print(combined_plots)
